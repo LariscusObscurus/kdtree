@@ -29,13 +29,11 @@ public:
 	int buildTree() 
 	{
 		points.sort();
-		
 	}
 
 private:
 	int medianX()
 	{
-
 	}
 	int medianY();
 	int split(int value, std::list<T> sortedPoints);
