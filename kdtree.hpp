@@ -27,21 +27,24 @@ public:
 
 	int buildTree(std::list<T> points)
 	{
-		points.sort([](const T& lhs, const T& rhs){
-			return (lhs.x < rhs.x);
-		});
+		int pos;
+		sortX(points);
 		root = new Node_t;
 		mNodeList.push_back(root);
-		root->key = median(points);
-		split(0, root, root->key, points);
+		median(points, root->key, pos);
+		split(0, root, pos, points);
+		return 0;
 	}
 
 private:
-	T median(std::list<T> sortedPoints)
+	void median(std::list<T> sortedPoints, T& medPoint, int& pos)
 	{
 		
 		int medianPoint = sortedPoints.size() / 2;
-		return sortedPoints[medianPoint];
+		pos = medianPoint;
+		auto it = sortedPoints.begin();
+		std::advance(it, medianPoint);
+		*it = medPoint;
 	}
 	std::list<T> sortX(std::list<T> points)
 	{
@@ -59,22 +62,26 @@ private:
 		return points;
 
 	}
-	int split(int depth ,Node_t *parentNode,T medPoint ,std::list<T> points)
+	int split(int depth ,Node_t *parentNode,T medPos,std::list<T> points)
 	{
 		std::list<T> left;
 		std::list<T> right;
+		T medRight; 
+		T medLeft; 
+		int posLeft;
+		int posRight;
 
 		if(points.size() == 0) {
 			return 0;
 		} else if(points.size() == 1) {
-			parentNode->key = points[0];
+			parentNode->key = points.front();
 			return 0;
 		}
 
 		if(depth % 2 == 0) {
 		/* X */
 			auto it = points.begin();
-			std::advance(it, medPoint.x);
+			std::advance(it, medPos);
 			points.splice(it, left);
 			right = points;
 
@@ -84,7 +91,7 @@ private:
 		} else {
 		/* Y */
 			auto it = points.begin();
-			std::advance(it, medPoint.y);
+			std::advance(it, medPos);
 			points.splice(it, right);
 			left = points;
 
@@ -94,17 +101,17 @@ private:
 
 		parentNode->right = new Node_t;
 		mNodeList.push_back(parentNode->right);
-		T medRight = median(left);
+		median(left, medRight, posRight);
 		parentNode->key = medRight;
 
 		parentNode->left = new Node_t;
 		mNodeList.push_back(parentNode->left);
-		T medLeft = median(left);
+		median(left, medLeft, posLeft);
 		parentNode->key = medLeft;
 
 
-		split(depth + 1, parentNode->right, medRight, right);
-		split(depth + 1, parentNode->left, medLeft, left);
+		split(depth + 1, parentNode->right, posRight, right);
+		split(depth + 1, parentNode->left, posLeft, left);
 	}
 };
 
