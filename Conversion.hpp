@@ -7,15 +7,19 @@
 template <typename T>
 std::string numberToString (T Number)
 {
-	std::stringstream ss;
+	using namespace std;
+	
+	stringstream ss;
 	ss << Number;
 	return ss.str();
 }
 
 template <typename T>
-T stringToNumber (const std::string &Text)
+T stringToNumber (const std::string& text)
 {
-	std::stringstream ss(Text);
+	using namespace std;
+	
+	stringstream ss(text);
 	T result;
 	return ss >> result ? result : 0;
 } 

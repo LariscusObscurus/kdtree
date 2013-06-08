@@ -48,6 +48,9 @@ int main(int argc, char** argv)
 			s64 y = stringToNumber<s64>(rhs);
 			Point<s64> p(x,y);
 			points.push_back(p);
+			
+			cout << "x: " << x << '\n';
+			cout << "y: " << y << '\n' << endl;
 		} catch (...) {
 			cerr << "Couldn't convert number.\n" << endl;
 			printErrorFileFormat();
