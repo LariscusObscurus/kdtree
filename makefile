@@ -1,4 +1,4 @@
-CC=g++
+CC=clang++
 NAME=kdtree
 CFLAGS=-Wall -Wextra -Wconversion -std=c++0x
 LFLAGS=
