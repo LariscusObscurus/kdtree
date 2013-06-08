@@ -58,7 +58,8 @@ int main(int argc, char** argv)
 		}
 	}
 	
-	Kdtree<Point<s64>> kdtree(points);
+	Kdtree<Point<s64>> kdtree;
+	kdtree.buildTree(points);
 	return EXIT_SUCCESS;
 }
 

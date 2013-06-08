@@ -33,7 +33,7 @@ public:
 		root = new Node_t;
 		mNodeList.push_back(root);
 		root->key = median(points);
-		split(0, root, *root->key, points);
+		split(0, root, root->key, points);
 	}
 
 private:
