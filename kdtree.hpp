@@ -14,12 +14,22 @@ class Kdtree
 	};
 	std::list<T> points;
 public:
-	Kdtree ();
+	Kdtree (std::list<T>& inPoints)
+	{
+		points = inPoints;
+	}
 	virtual ~Kdtree ();
-	int buildTree();
+
+	int buildTree() 
+	{
+		
+	}
 
 private:
-	int medianX();
+	int medianX()
+	{
+
+	}
 	int medianY();
 	int split(int value, std::list<T> sortedPoints);
 };
