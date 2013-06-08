@@ -18,7 +18,9 @@ public:
 	{
 		points = inPoints;
 	}
-	~Kdtree ();
+	~Kdtree ()
+	{
+	}
 
 	int buildTree() 
 	{
