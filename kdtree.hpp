@@ -13,12 +13,16 @@ class Kdtree
 		Node * right;
 	}Node_t;
 	Node_t *root;
+	std::list<Node_t *> mNodeList;
 public:
 	Kdtree ()
 	{
 	}
 	~Kdtree ()
 	{
+		for(auto& it : mNodeList) {
+			delete it;
+		}
 	}
 
 	int buildTree(std::list<T> points)
@@ -27,11 +31,9 @@ public:
 			return (lhs.x < rhs.x);
 		});
 		root = new Node_t;
+		mNodeList.push_back(root);
 		root->key = median(points);
 		split(0, root, *root->key, points);
-
-		
-
 	}
 
 private:
@@ -91,10 +93,15 @@ private:
 		}
 
 		parentNode->right = new Node_t;
+		mNodeList.push_back(parentNode->right);
 		T medRight = median(left);
+		parentNode->key = medRight;
 
 		parentNode->left = new Node_t;
+		mNodeList.push_back(parentNode->left);
 		T medLeft = median(left);
+		parentNode->key = medLeft;
+
 
 		split(depth + 1, parentNode->right, medRight, right);
 		split(depth + 1, parentNode->left, medLeft, left);
