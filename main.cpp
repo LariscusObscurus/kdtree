@@ -4,10 +4,12 @@
 #include <fstream>
 #include <iostream>
 
+typedef int32_t s32;
+typedef int64_t s64;
+
 int main(int argc, char** argv)
 {
 	using namespace std;
-	typedef int32_t s32;
 	
 	s32 count = 0;
 	string str = "";
