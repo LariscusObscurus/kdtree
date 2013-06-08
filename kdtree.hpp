@@ -3,19 +3,21 @@
 
 
 template <typename T>
-class kdtree
+class Kdtree
 {
 	struct Node {
 		T key;
 		Node * left;
 		Node * right;
 	};
+	std::list<
 public:
 	kdtree ();
 	virtual ~kdtree ();
 
 private:
-
+	int medianX;
+	int medianY;
 };
 
 #endif 
