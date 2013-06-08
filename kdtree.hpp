@@ -17,6 +17,10 @@ public:
 	Kdtree (std::list<T>& inPoints)
 	{
 		points = inPoints;
+		
+		points.sort([](const T& lhs, const T& rhs){
+			return (lhs.x < rhs.x);
+		});
 	}
 	~Kdtree ()
 	{
