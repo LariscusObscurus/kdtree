@@ -10,10 +10,9 @@ class Kdtree
 		Node * left;
 		Node * right;
 	};
-	std::list<
 public:
-	kdtree ();
-	virtual ~kdtree ();
+	Kdtree ();
+	virtual ~Kdtree ();
 
 private:
 	int medianX;
