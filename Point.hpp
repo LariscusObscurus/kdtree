@@ -85,6 +85,56 @@ struct Point
 		y *= p.y;
 		return *this;
 	}
+	
+	bool lessX(const T& value)
+	{
+		return (x < value);
+	}
+	
+	bool lessY(const T& value)
+	{
+		return (y < value);
+	}
+	
+	bool greaterX(const T& value)
+	{
+		return (x > value);
+	}
+	
+	bool greaterY(const T& value)
+	{
+		return (y > value);
+	}
+	
+	bool operator<(const Point& p)
+	{
+		return (lessX(p.x) && lessY(p.y));
+	}
+	
+	bool operator<=(const Point& p)
+	{
+		return ((lessX(p.x) || x == p.x) && (lessY(p.y) || y == p.y));
+	}
+	
+	bool operator>(const Point& p)
+	{
+		return (greaterX(p.x) && greaterY(p.y));
+	}
+	
+	bool operator>=(const Point& p)
+	{
+		return ((greaterX(p.x) || x == p.x) && (greaterY(p.y) || y == p.y));
+	}
+	
+	static bool less(const Point& rhs, const Point& lhs)
+	{
+		return (rhs < lhs);
+	}
+	
+	static bool greater(const Point& rhs, const Point& lhs)
+	{
+		return (rhs > lhs);
+	}
 };
 
 #endif
