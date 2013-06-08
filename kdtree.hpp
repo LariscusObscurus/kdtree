@@ -3,7 +3,7 @@
 
 
 template <typename T>
-class KdTree
+class Kdtree
 {
 	struct Node {
 		T key;
@@ -11,11 +11,12 @@ class KdTree
 		Node * right;
 	};
 public:
-	KdTree ();
-	virtual ~KdTree ();
+	Kdtree ();
+	virtual ~Kdtree ();
 
 private:
-
+	int medianX;
+	int medianY;
 };
 
 #endif 
