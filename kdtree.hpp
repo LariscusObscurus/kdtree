@@ -11,8 +11,8 @@ class KdTree
 		Node * right;
 	};
 public:
-	kdtree ();
-	virtual ~kdtree ();
+	KdTree ();
+	virtual ~KdTree ();
 
 private:
 
