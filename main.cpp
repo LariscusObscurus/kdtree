@@ -14,14 +14,14 @@ int main(int argc, char** argv)
 	
 	if (argc != 2) {
 		cerr << "usage: " << argv[0] << " filename" << endl;
-		_exit(EXIT_FAILURE);
+		return EXIT_FAILURE;
 	}
 	
 	ifstream inputFile(argv[1]);
 	
 	if (!inputFile.good()) {
 		cerr << "Couldn't open input file: " << argv[1] << endl;
-		_exit(EXIT_FAILURE);
+		return EXIT_FAILURE;
 	}
 	
 	inputFile >> str;
@@ -34,7 +34,7 @@ int main(int argc, char** argv)
 		cerr << "<X_2>,<Y_2>\n";
 		cerr << "...\n";
 		cerr << "<X_n>,<Y_n>" << endl;
-		_exit(EXIT_FAILURE);
+		return EXIT_FAILURE;
 	}
 	
 	while (inputFile >> str) {
@@ -45,7 +45,6 @@ int main(int argc, char** argv)
 			cout << stringToNumber<int64_t>(lhs) << '\n';
 			cout << stringToNumber<int64_t>(rhs) << '\n' << endl;
 		} catch (...) {
-			cout
 		}
 	}
 	return EXIT_SUCCESS;
