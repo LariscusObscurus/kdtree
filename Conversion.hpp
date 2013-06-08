@@ -1,6 +1,9 @@
 #ifndef CONVERSION_HPP
 #define CONVERSION_HPP
 
+#include <sstream>
+#include <string>
+
 template <typename T>
 std::string numberToString (T Number)
 {
