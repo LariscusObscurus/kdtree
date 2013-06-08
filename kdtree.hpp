@@ -18,10 +18,11 @@ public:
 	{
 		points = inPoints;
 	}
-	virtual ~Kdtree ();
+	~Kdtree ();
 
 	int buildTree() 
 	{
+		points.sort();
 		
 	}
 
