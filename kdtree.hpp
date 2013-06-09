@@ -10,6 +10,7 @@ class Kdtree
 {
 	typedef struct Node {
 		int key;
+		/* leaves haben key -1 */
 		T leave;
 		Node * left;
 		Node * right;
@@ -61,10 +62,11 @@ private:
 
 		if(points.size() % 2 == 0){
 		/* gerade Anzahl an Punkten -> durchschnitt als splitValue */
-			auto it2 = points.begin();
+			/*auto it2 = points.begin();
 			std::advance(it2, (medianPoint-1));
-		/* Fehler hier */
-			splitValue = (int)(it->x + it2->x) / 2; 
+		TODO: Fehler hier 
+			splitValue = (int)(it->x + it2->x) / 2; */
+			splitValue = (int)it->x;
 		} else {
 			std::advance(it, medianPoint);
 			splitValue = (int)it->x;
@@ -84,9 +86,10 @@ private:
 
 		if(points.size() % 2 == 0){
 		/* gerade Anzahl an Punkten -> durchschnitt als splitValue */
-			auto it2 = points.begin();
+			/*auto it2 = points.begin();
 			std::advance(it2, (medianPoint-1));
-			splitValue = (int)(it->y + it2->y) / 2; 
+			splitValue = (int)(it->y + it2->y) / 2; */
+			splitValue = (int)it->y;
 		} else {
 			splitValue = (int)it->y;
 		}
@@ -101,15 +104,15 @@ private:
 		std::list<T> right;
 		int key = 0;
 
+		if(points.size() == 0) {
+			parentNode = nullptr;
+			return 0;
+		}
+
 		parentNode = new Node_t;
 		mNodeList.push_back(parentNode);
 
-		if(points.size() == 0) {
-			parentNode->right = nullptr;
-			parentNode->left = nullptr;
-			return 0;
-		} else if(points.size() == 1) {
-		/* leaves haben key -1 */
+		if(points.size() == 1) {
 			parentNode->key = -1;
 			parentNode->leave = points.front();
 			parentNode->right = nullptr;
