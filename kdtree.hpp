@@ -62,7 +62,7 @@ private:
 		return points;
 
 	}
-	int split(int depth ,Node_t *parentNode,T medPos,std::list<T> points)
+	int split(int depth ,Node_t *parentNode,int medPos,std::list<T> points)
 	{
 		std::list<T> left;
 		std::list<T> right;
@@ -82,7 +82,7 @@ private:
 		/* X */
 			auto it = points.begin();
 			std::advance(it, medPos);
-			points.splice(it, left);
+			left.splice(left.begin(),points, it, points.end());
 			right = points;
 
 			sortY(right);
@@ -92,11 +92,11 @@ private:
 		/* Y */
 			auto it = points.begin();
 			std::advance(it, medPos);
-			points.splice(it, right);
-			left = points;
+			left.splice(left.begin(),points, it, points.end());
+			right = points;
 
-			sortX(right);
 			sortX(left);
+			sortX(right);
 		}
 
 		parentNode->right = new Node_t;
@@ -112,6 +112,7 @@ private:
 
 		split(depth + 1, parentNode->right, posRight, right);
 		split(depth + 1, parentNode->left, posLeft, left);
+		return 0;
 	}
 };
 
