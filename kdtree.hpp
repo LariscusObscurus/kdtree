@@ -3,12 +3,14 @@
 
 #include <list>
 #include "Point.hpp"
+#include <iostream>
 
 template <typename T>
 class Kdtree
 {
 	typedef struct Node {
-		T key;
+		int key;
+		T leave;
 		Node * left;
 		Node * right;
 	}Node_t;
@@ -21,31 +23,19 @@ public:
 	~Kdtree ()
 	{
 		for(auto& it : mNodeList) {
+			std::cout << "Nodekey: key = " << it->key << std::endl;
 			delete it;
+
 		}
 	}
 
 	int buildTree(std::list<T> points)
 	{
-		int pos;
-		sortX(points);
-		root = new Node_t;
-		mNodeList.push_back(root);
-		median(points, root->key, pos);
-		split(0, root, pos, points);
+		split(0, root, points);
 		return 0;
 	}
 
 private:
-	void median(std::list<T> sortedPoints, T& medPoint, int& pos)
-	{
-		
-		int medianPoint = sortedPoints.size() / 2;
-		pos = medianPoint;
-		auto it = sortedPoints.begin();
-		std::advance(it, medianPoint);
-		*it = medPoint;
-	}
 	std::list<T> sortX(std::list<T> points)
 	{
 		points.sort([](const T& lhs, const T& rhs){
@@ -62,56 +52,82 @@ private:
 		return points;
 
 	}
-	int split(int depth ,Node_t *parentNode,int medPos,std::list<T> points)
+	int medianX(std::list<T> points, std::list<T>& leftPoints, std::list<T>& rightPoints)
+	{
+		sortX(points);
+		int splitValue = 0;
+		int medianPoint = (int) points.size() / 2;
+		auto it = points.begin();
+
+		if(points.size() % 2 == 0){
+		/* gerade Anzahl an Punkten -> durchschnitt als splitValue */
+			auto it2 = points.begin();
+			std::advance(it2, (medianPoint-1));
+		/* Fehler hier */
+			splitValue = (int)(it->x + it2->x) / 2; 
+		} else {
+			std::advance(it, medianPoint);
+			splitValue = (int)it->x;
+		}
+		rightPoints.splice(rightPoints.begin(), points, it, points.end());
+		leftPoints = points;
+		return splitValue;
+	}
+
+	int medianY(std::list<T> points, std::list<T>& leftPoints, std::list<T>& rightPoints)
+	{
+		sortY(points);
+		int splitValue = 0;
+		int medianPoint = (int) points.size() / 2;
+		auto it = points.begin();
+		std::advance(it, medianPoint);
+
+		if(points.size() % 2 == 0){
+		/* gerade Anzahl an Punkten -> durchschnitt als splitValue */
+			auto it2 = points.begin();
+			std::advance(it2, (medianPoint-1));
+			splitValue = (int)(it->y + it2->y) / 2; 
+		} else {
+			splitValue = (int)it->y;
+		}
+		rightPoints.splice(rightPoints.begin(), points, it, points.end());
+		leftPoints = points;
+		return splitValue;
+	}
+
+	int split(int depth ,Node_t *parentNode ,std::list<T> points)
 	{
 		std::list<T> left;
 		std::list<T> right;
-		T medRight; 
-		T medLeft; 
-		int posLeft;
-		int posRight;
+		int key = 0;
+
+		parentNode = new Node_t;
+		mNodeList.push_back(parentNode);
 
 		if(points.size() == 0) {
+			parentNode->right = nullptr;
+			parentNode->left = nullptr;
 			return 0;
 		} else if(points.size() == 1) {
-			parentNode->key = points.front();
+		/* leaves haben key -1 */
+			parentNode->key = -1;
+			parentNode->leave = points.front();
+			parentNode->right = nullptr;
+			parentNode->left = nullptr;
 			return 0;
 		}
 
-		if(depth % 2 == 0) {
+		if((depth % 2 == 0) && (depth !=0)) {
 		/* X */
-			auto it = points.begin();
-			std::advance(it, medPos);
-			left.splice(left.begin(),points, it, points.end());
-			right = points;
-
-			sortY(right);
-			sortY(left);
-
+			key = medianX(points, left, right);
 		} else {
 		/* Y */
-			auto it = points.begin();
-			std::advance(it, medPos);
-			left.splice(left.begin(),points, it, points.end());
-			right = points;
-
-			sortX(left);
-			sortX(right);
+			key = medianY(points, left, right);
 		}
+		parentNode->key = key;
 
-		parentNode->right = new Node_t;
-		mNodeList.push_back(parentNode->right);
-		median(left, medRight, posRight);
-		parentNode->key = medRight;
-
-		parentNode->left = new Node_t;
-		mNodeList.push_back(parentNode->left);
-		median(left, medLeft, posLeft);
-		parentNode->key = medLeft;
-
-
-		split(depth + 1, parentNode->right, posRight, right);
-		split(depth + 1, parentNode->left, posLeft, left);
+		split(depth + 1, parentNode->right, right);
+		split(depth + 1, parentNode->left, left);
 		return 0;
 	}
 };
