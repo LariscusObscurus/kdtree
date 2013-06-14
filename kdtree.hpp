@@ -37,21 +37,18 @@ public:
 	}
 
 private:
-	std::list<T> sortX(std::list<T> points)
+	void sortX(std::list<T>& points)
 	{
 		points.sort([](const T& lhs, const T& rhs){
 			return (lhs.x < rhs.x);
 		});
-		return points;
 	}
 
-	std::list<T> sortY(std::list<T> points)
+	void sortY(std::list<T>& points)
 	{
 		points.sort([](const T& lhs, const T& rhs){
 			return (lhs.y < rhs.y);
 		});
-		return points;
-
 	}
 	int medianX(std::list<T> points, std::list<T>& leftPoints, std::list<T>& rightPoints)
 	{
@@ -59,16 +56,15 @@ private:
 		int splitValue = 0;
 		int medianPoint = (int) points.size() / 2;
 		auto it = points.begin();
+		std::advance(it, medianPoint);
 
 		if(points.size() % 2 == 0){
 		/* gerade Anzahl an Punkten -> durchschnitt als splitValue */
-			/*auto it2 = points.begin();
+			auto it2 = points.begin();
 			std::advance(it2, (medianPoint-1));
-		TODO: Fehler hier 
-			splitValue = (int)(it->x + it2->x) / 2; */
+			splitValue = (int)(it->x + it2->x) / 2;
 			splitValue = (int)it->x;
 		} else {
-			std::advance(it, medianPoint);
 			splitValue = (int)it->x;
 		}
 		rightPoints.splice(rightPoints.begin(), points, it, points.end());
@@ -86,9 +82,9 @@ private:
 
 		if(points.size() % 2 == 0){
 		/* gerade Anzahl an Punkten -> durchschnitt als splitValue */
-			/*auto it2 = points.begin();
+			auto it2 = points.begin();
 			std::advance(it2, (medianPoint-1));
-			splitValue = (int)(it->y + it2->y) / 2; */
+			splitValue = (int)(it->y + it2->y) / 2;
 			splitValue = (int)it->y;
 		} else {
 			splitValue = (int)it->y;
@@ -120,7 +116,7 @@ private:
 			return 0;
 		}
 
-		if((depth % 2 == 0) && (depth !=0)) {
+		if(depth % 2 == 0) {
 		/* X */
 			key = medianX(points, left, right);
 		} else {
