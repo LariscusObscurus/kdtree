@@ -3,12 +3,15 @@
 
 #include <list>
 #include "Point.hpp"
+#include <iostream>
 
 template <typename T>
 class Kdtree
 {
 	typedef struct Node {
-		T key;
+		int key;
+		/* leaves haben key -1 */
+		T leave;
 		Node * left;
 		Node * right;
 	}Node_t;
@@ -21,97 +24,136 @@ public:
 	~Kdtree ()
 	{
 		for(auto& it : mNodeList) {
+			std::cout << "Nodekey: key = " << it->key << std::endl;
 			delete it;
+
 		}
 	}
 
 	int buildTree(std::list<T> points)
 	{
-		int pos;
-		sortX(points);
-		root = new Node_t;
-		mNodeList.push_back(root);
-		median(points, root->key, pos);
-		split(0, root, pos, points);
+		split(0, root, points);
 		return 0;
 	}
 
-private:
-	void median(std::list<T> sortedPoints, T& medPoint, int& pos)
+	T nearestNeighbor(T& point)
 	{
-		
-		int medianPoint = sortedPoints.size() / 2;
-		pos = medianPoint;
-		auto it = sortedPoints.begin();
-		std::advance(it, medianPoint);
-		*it = medPoint;
+		int depth = 0;
+		Node_t *curNode = root;
+
+		while(curNode->key != -1) {
+			if(depth % 2 == 0) {
+			/* X */
+				if(point.x > curNode->key) {
+					curNode = curNode->right;
+				} else {
+					curNode = curNode->left;
+				}
+			} else {
+			/* Y */
+				if(point.y > curNode->key) {
+					curNode = curNode->right;
+				} else {
+					curNode = curNode->left;
+				}
+			}
+			depth++;
+		}
+		return curNode->leave;
 	}
-	std::list<T> sortX(std::list<T> points)
+
+private:
+	void sortX(std::list<T>& points)
 	{
 		points.sort([](const T& lhs, const T& rhs){
 			return (lhs.x < rhs.x);
 		});
-		return points;
 	}
 
-	std::list<T> sortY(std::list<T> points)
+	void sortY(std::list<T>& points)
 	{
 		points.sort([](const T& lhs, const T& rhs){
 			return (lhs.y < rhs.y);
 		});
-		return points;
-
 	}
-	int split(int depth ,Node_t *parentNode,int medPos,std::list<T> points)
+	int medianX(std::list<T> points, std::list<T>& leftPoints, std::list<T>& rightPoints)
+	{
+		sortX(points);
+		int splitValue = 0;
+		int medianPoint = (int) points.size() / 2;
+		auto it = points.begin();
+		std::advance(it, medianPoint);
+
+		if(points.size() % 2 == 0){
+		/* gerade Anzahl an Punkten -> durchschnitt als splitValue */
+			auto it2 = points.begin();
+			std::advance(it2, (medianPoint-1));
+			splitValue = (int)(it->x + it2->x) / 2;
+			splitValue = (int)it->x;
+		} else {
+			splitValue = (int)it->x;
+		}
+		rightPoints.splice(rightPoints.begin(), points, it, points.end());
+		leftPoints = points;
+		return splitValue;
+	}
+
+	int medianY(std::list<T> points, std::list<T>& leftPoints, std::list<T>& rightPoints)
+	{
+		sortY(points);
+		int splitValue = 0;
+		int medianPoint = (int) points.size() / 2;
+		auto it = points.begin();
+		std::advance(it, medianPoint);
+
+		if(points.size() % 2 == 0){
+		/* gerade Anzahl an Punkten -> durchschnitt als splitValue */
+			auto it2 = points.begin();
+			std::advance(it2, (medianPoint-1));
+			splitValue = (int)(it->y + it2->y) / 2;
+			splitValue = (int)it->y;
+		} else {
+			splitValue = (int)it->y;
+		}
+		rightPoints.splice(rightPoints.begin(), points, it, points.end());
+		leftPoints = points;
+		return splitValue;
+	}
+
+	int split(int depth ,Node_t*& parentNode ,std::list<T> points)
 	{
 		std::list<T> left;
 		std::list<T> right;
-		T medRight; 
-		T medLeft; 
-		int posLeft;
-		int posRight;
+		int key = 0;
 
 		if(points.size() == 0) {
+			parentNode = nullptr;
 			return 0;
-		} else if(points.size() == 1) {
-			parentNode->key = points.front();
+		}
+
+		parentNode = new Node_t;
+		mNodeList.push_back(parentNode);
+
+		if(points.size() == 1) {
+			parentNode->key = -1;
+			parentNode->leave = points.front();
+			parentNode->right = nullptr;
+			parentNode->left = nullptr;
 			return 0;
 		}
 
 		if(depth % 2 == 0) {
 		/* X */
-			auto it = points.begin();
-			std::advance(it, medPos);
-			points.splice(it, left);
-			right = points;
-
-			sortY(right);
-			sortY(left);
-
+			key = medianX(points, left, right);
 		} else {
 		/* Y */
-			auto it = points.begin();
-			std::advance(it, medPos);
-			points.splice(it, right);
-			left = points;
-
-			sortX(right);
-			sortX(left);
+			key = medianY(points, left, right);
 		}
+		parentNode->key = key;
 
-		parentNode->right = new Node_t;
-		mNodeList.push_back(parentNode->right);
-		median(left, medRight, posRight);
-		parentNode->key = medRight;
-
-		parentNode->left = new Node_t;
-		mNodeList.push_back(parentNode->left);
-		median(left, medLeft, posLeft);
-		parentNode->key = medLeft;
-
-
-		split(depth + 1, parentNode->right, posRight, right);
-		split(depth + 1, parentNode->left, posLeft, left);
+		split(depth + 1, parentNode->right, right);
+		split(depth + 1, parentNode->left, left);
+		return 0;
 	}
 };
 
