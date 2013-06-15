@@ -62,7 +62,7 @@ private:
 		return points;
 
 	}
-	int split(int depth ,Node_t *parentNode,T medPos,std::list<T> points)
+	int split(int depth ,Node_t *parentNode,int medPos,std::list<T> points)
 	{
 		std::list<T> left;
 		std::list<T> right;
