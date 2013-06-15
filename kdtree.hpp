@@ -36,6 +36,32 @@ public:
 		return 0;
 	}
 
+	T nearestNeighbor(T& point)
+	{
+		int depth = 0;
+		Node_t *curNode = root;
+
+		while(curNode->key != -1) {
+			if(depth % 2 == 0) {
+			/* X */
+				if(point.x > curNode->key) {
+					curNode = curNode->right;
+				} else {
+					curNode = curNode->left;
+				}
+			} else {
+			/* Y */
+				if(point.y > curNode->key) {
+					curNode = curNode->right;
+				} else {
+					curNode = curNode->left;
+				}
+			}
+			depth++;
+		}
+		return curNode->leave;
+	}
+
 private:
 	void sortX(std::list<T>& points)
 	{
@@ -94,7 +120,7 @@ private:
 		return splitValue;
 	}
 
-	int split(int depth ,Node_t *parentNode ,std::list<T> points)
+	int split(int depth ,Node_t*& parentNode ,std::list<T> points)
 	{
 		std::list<T> left;
 		std::list<T> right;
