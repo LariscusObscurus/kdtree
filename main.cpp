@@ -60,11 +60,8 @@ int main(int argc, char** argv)
 	
 	Kdtree<Point<s64>> kdtree;
 	kdtree.buildTree(points);
-	Point<s64> nearest;
 	Point<s64> test(1,1);
-	nearest = kdtree.nearestNeighbor(test);
-	std::cout << "Nearest: x " << nearest.x << " y " 
-	<< nearest.y << std::endl;
+	kdtree.nearestNeighbor(test);
 	return EXIT_SUCCESS;
 }
 
