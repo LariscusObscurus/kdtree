@@ -24,7 +24,9 @@ class Kdtree
 	}Node_t;
 	Node_t *root;
 	std::list<Node_t *> mNodeList;
+
 	T mQueryPoint;
+	int mCount;
 	float mDist;
 	std::list<T> mNearPoints;
 public:
@@ -46,9 +48,10 @@ public:
 		return 0;
 	}
 
-	void nearestNeighbor(T& point)
+	void nearestNeighbor(T& point, int count)
 	{
 		mQueryPoint = point;
+		mCount = count;
 		mDist = std::numeric_limits<float>::infinity();
 		recursiveSearch(root);
 		for (auto& it : mNearPoints) {
@@ -79,8 +82,9 @@ private:
 	int recursiveSearch(Node_t * curNode)
 	{
 		int pointAxisVal = 0;
-		int searchPriority = -1; /* 1 = left, 0 = right*/
-
+		if (curNode == nullptr) {
+			return 0;
+		}
 		if(curNode->key == -1) {
 			float dist = checkDistance(mQueryPoint, curNode->leave);
 			if(dist < mDist) {
@@ -97,12 +101,6 @@ private:
 		}
 
 		if(pointAxisVal <= curNode->key) {
-			searchPriority = 1;
-		} else {
-			searchPriority = 0;
-		}
-
-		if(searchPriority == 1) {
 			if ((pointAxisVal - mDist) <= curNode->key) {
 				recursiveSearch(curNode->left);
 			} 

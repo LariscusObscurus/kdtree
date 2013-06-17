@@ -60,8 +60,8 @@ int main(int argc, char** argv)
 	
 	Kdtree<Point<s64>> kdtree;
 	kdtree.buildTree(points);
-	Point<s64> test(1,1);
-	kdtree.nearestNeighbor(test);
+	Point<s64> test(2,2);
+	kdtree.nearestNeighbor(test, 3);
 	return EXIT_SUCCESS;
 }
 
