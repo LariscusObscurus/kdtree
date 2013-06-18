@@ -50,7 +50,7 @@ public:
 	~Kdtree ()
 	{
 		for(auto& it : mNodeList) {
-			std::cout << "Nodekey: key = " << it->key << std::endl;
+			/*std::cout << "Nodekey: key = " << it->key << std::endl;*/
 			delete it;
 		}
 	}
