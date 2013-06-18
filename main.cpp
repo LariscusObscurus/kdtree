@@ -20,11 +20,17 @@ int main(int argc, char** argv)
 	string str = "";
 	std::list<Point<s64>> points(0);
 	
-	if (argc != 2) {
-		cerr << "usage: " << argv[0] << " <filename>" << endl;
+	if (argc != 3) {
+		cerr << "usage: " << argv[0] << " <filename> <search_count>" << endl;
 		return EXIT_FAILURE;
 	}
 	
+	try {
+		count = stringToNumber<s32>(argv[2]);
+	} catch (...) {
+		cerr << "error converting number" << endl;
+		return EXIT_FAILURE;
+	}
 	ifstream inputFile(argv[1]);
 	
 	if (!inputFile.good()) {
@@ -61,7 +67,7 @@ int main(int argc, char** argv)
 	Kdtree<Point<s64>> kdtree;
 	kdtree.buildTree(points);
 	Point<s64> test(5,5);
-	kdtree.nearestNeighbor(test, 4);
+	kdtree.nearestNeighbor(test, (int)count);
 	return EXIT_SUCCESS;
 }
 
