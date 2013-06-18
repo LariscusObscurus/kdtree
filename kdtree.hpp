@@ -64,6 +64,10 @@ public:
 		mCount = count;
 		mDist = std::numeric_limits<float>::infinity();
 		recursiveSearch(root);
+
+		std::cout << "Visited " << mNearPoints.size() 
+		<< " Points." << std::endl;
+
 		for (int i = 0; i < count; i++) {
 			foundCandidate_t tmp = mNearPoints.top();
 			std::cout << "Nearest: x " << tmp.point.x << " y " 
@@ -75,7 +79,7 @@ public:
 private:
 	float checkDistance(T& pointA, T& pointB) {
 		T vectAB = pointB - pointA;
-		return (sqrt(pow(vectAB.x, 2) + pow(vectAB.y, 2)));
+		return ((float)sqrt(pow(vectAB.x, 2) + pow(vectAB.y, 2)));
 	}
 	void sortX(std::list<T>& points)
 	{
@@ -93,7 +97,7 @@ private:
 
 	int recursiveSearch(Node_t * curNode)
 	{
-		int pointAxisVal = 0;
+		long pointAxisVal = 0;
 		if (curNode == nullptr) {
 			return 0;
 		}
@@ -102,7 +106,7 @@ private:
 			if(dist < mDist) {
 				foundCandidate_t newCandidate = {dist, curNode->leave};
 				mNearPoints.push(newCandidate);
-				if(mCount == mNearPoints.size()) {
+				if(mCount == (int) mNearPoints.size()) {
 					mDist = dist;
 				}
 			}
@@ -147,7 +151,6 @@ private:
 			auto it2 = points.begin();
 			std::advance(it2, (medianPoint-1));
 			splitValue = (int)(it->x + it2->x) / 2;
-			splitValue = (int)it->x;
 		} else {
 			splitValue = (int)it->x;
 		}
@@ -169,7 +172,6 @@ private:
 			auto it2 = points.begin();
 			std::advance(it2, (medianPoint-1));
 			splitValue = (int)(it->y + it2->y) / 2;
-			splitValue = (int)it->y;
 		} else {
 			splitValue = (int)it->y;
 		}
