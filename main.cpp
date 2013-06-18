@@ -54,7 +54,7 @@ int main(int argc, char** argv)
 		return EXIT_FAILURE;
 	}
 	
-	if (count >= fileCount) {
+	if (count > fileCount) {
 		cerr << "One does simply not count more than the kdtree has on points." << endl;
 		return EXIT_FAILURE;
 	}
