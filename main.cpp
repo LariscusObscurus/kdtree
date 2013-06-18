@@ -58,6 +58,9 @@ int main(int argc, char** argv)
 		cerr << "One does simply not count more than the kdtree got on points." << '\n';
 		cerr << "Point count in kdtree: " << fileCount << endl;
 		return EXIT_FAILURE;
+	} else if (fileCount == 0) {
+		cerr << "There are no points in the file." << endl;
+		return EXIT_FAILURE;
 	}
 	/**
 	 * Einlesen der Datei es dürfen keine Werte unter 0 in der datei sein
