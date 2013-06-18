@@ -8,7 +8,7 @@
 #include <list>
 
 typedef int32_t s32;
-typedef int64_t s64;
+typedef uint32_t u32;
 
 void printErrorFileFormat();
 
@@ -16,17 +16,24 @@ int main(int argc, char** argv)
 {
 	using namespace std;
 	
+	Point<u32> point;
 	s32 count = 0;
 	string str = "";
-	std::list<Point<s64>> points(0);
+	std::list<Point<u32>> points(0);
 	
-	if (argc != 3) {
-		cerr << "usage: " << argv[0] << " <filename> <search_count>" << endl;
+	if (argc != 4) {
+		cerr << "usage: " << argv[0] << " <filename> <x>,<y> <search_count>" << endl;
 		return EXIT_FAILURE;
 	}
 	
 	try {
-		count = stringToNumber<s32>(argv[2]);
+		string str = argv[2];
+		string lhs = str.substr(0, str.find(','));
+		string rhs = str.substr(str.find(',')+1);
+		u32 x = stringToNumber<u32>(lhs);
+		u32 y = stringToNumber<u32>(rhs);
+		point = Point<u32>(x,y);
+		count = stringToNumber<s32>(argv[3]);
 	} catch (...) {
 		cerr << "error converting number" << endl;
 		return EXIT_FAILURE;
@@ -44,9 +51,9 @@ int main(int argc, char** argv)
 		try {
 			string lhs = str.substr(0, str.find(','));
 			string rhs = str.substr(str.find(',')+1);
-			s64 x = stringToNumber<s64>(lhs);
-			s64 y = stringToNumber<s64>(rhs);
-			Point<s64> p(x,y);
+			u32 x = stringToNumber<u32>(lhs);
+			u32 y = stringToNumber<u32>(rhs);
+			Point<u32> p(x,y);
 			points.push_back(p);
 			
 			cout << "x: " << x << '\n';
@@ -58,10 +65,9 @@ int main(int argc, char** argv)
 		}
 	}
 	
-	Kdtree<Point<s64>> kdtree;
+	Kdtree<Point<u32>> kdtree;
 	kdtree.buildTree(points);
-	Point<s64> test(5,5);
-	kdtree.nearestNeighbor(test, (int)count);
+	kdtree.nearestNeighbor(point, (int)count);
 	return EXIT_SUCCESS;
 }
 

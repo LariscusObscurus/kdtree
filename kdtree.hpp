@@ -6,6 +6,10 @@
 #include <limits>
 #include <iostream>
 #include <queue>
+#include <cstdint>
+
+typedef int32_t s32;
+typedef uint32_t u32;
 
 enum axis_t {
 	X,
@@ -25,7 +29,7 @@ class Kdtree
 	}Node_t;
 
 	typedef struct foundCandidate {
-		float distance;
+		double distance;
 		T point;
 		int operator < (const foundCandidate& other) const {
 			return (distance > other.distance);
@@ -37,7 +41,7 @@ class Kdtree
 
 	T mQueryPoint;
 	int mCount;
-	float mDist;
+	double mDist;
 	std::priority_queue<foundCandidate_t> mNearPoints;
 public:
 	Kdtree ()
@@ -61,7 +65,7 @@ public:
 	{
 		mQueryPoint = point;
 		mCount = count;
-		mDist = std::numeric_limits<float>::infinity();
+		mDist = std::numeric_limits<double>::infinity();
 		recursiveSearch(root);
 
 		std::cout << "Visited " << mNearPoints.size() 
@@ -76,9 +80,9 @@ public:
 	}
 
 private:
-	float checkDistance(T& pointA, T& pointB) {
+	double checkDistance(T& pointA, T& pointB) {
 		T vectAB = pointB - pointA;
-		return ((float)sqrt(pow(vectAB.x, 2) + pow(vectAB.y, 2)));
+		return (sqrt((double)(pow(vectAB.x, 2.0) + pow(vectAB.y, 2.0))));
 	}
 	void sortX(std::list<T>& points)
 	{
@@ -96,12 +100,13 @@ private:
 
 	int recursiveSearch(Node_t * curNode)
 	{
-		long pointAxisVal = 0;
+		s32 pointAxisVal = 0;
+		
 		if (curNode == nullptr) {
 			return 0;
 		}
 		if(curNode->key == -1) {
-			float dist = checkDistance(mQueryPoint, curNode->leave);
+			double dist = checkDistance(mQueryPoint, curNode->leave);
 			if(dist < mDist) {
 				foundCandidate_t newCandidate = {dist, curNode->leave};
 				mNearPoints.push(newCandidate);
@@ -119,18 +124,18 @@ private:
 		}
 
 		if(pointAxisVal <= curNode->key) {
-			if ((pointAxisVal - mDist) <= curNode->key) {
+			if (((double)pointAxisVal - mDist) <= (double)curNode->key) {
 				recursiveSearch(curNode->left);
 			} 
-			if ((pointAxisVal + mDist) > curNode->key) {
+			if (((double)pointAxisVal + mDist) > (double)curNode->key) {
 				recursiveSearch(curNode->right);
 				
 			}
 		} else {
-			if ((pointAxisVal + mDist) > curNode->key) {
+			if (((double)pointAxisVal + mDist) > (double)curNode->key) {
 				recursiveSearch(curNode->right);
 			}
-			if ((pointAxisVal - mDist) <= curNode->key) {
+			if (((double)pointAxisVal - mDist) <= (double)curNode->key) {
 				recursiveSearch(curNode->left);
 			} 
 		}
