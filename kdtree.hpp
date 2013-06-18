@@ -19,15 +19,22 @@ enum axis_t {
 template <typename T>
 class Kdtree
 {
+	/**
+	 * Blätter haben key -1 
+	 * Punkte werden nur in Blättern gespeichert
+	 */
 	typedef struct Node {
 		int key;
-		/* leaves haben key -1 */
 		T leave;
 		axis_t axis;
 		Node * left;
 		Node * right;
 	}Node_t;
 
+	/**
+	 * Alle gefundenen Nachbarn werden in diesem struct gespeichert
+	 * "Falsch" definiertert operator wegen der Sortierreihenfolge
+	 */
 	typedef struct foundCandidate {
 		double distance;
 		T point;
@@ -37,6 +44,10 @@ class Kdtree
 	} foundCandidate_t;
 
 	Node_t *root;
+	/**
+	 * Pointer liste auf alle Nodes um einfach 
+	 * Speicher freigeben zu können
+	 */
 	std::list<Node_t *> mNodeList;
 
 	T mQueryPoint;
@@ -54,11 +65,10 @@ public:
 			delete it;
 		}
 	}
-
-	int buildTree(std::list<T> points)
+	
+	void buildTree(std::list<T> points)
 	{
 		split(0, root, points);
-		return 0;
 	}
 
 	void nearestNeighbor(T& point, int count)
@@ -80,10 +90,17 @@ public:
 	}
 
 private:
+	/**
+	 * Die Distanz zwischen zwei punkten brechenen.
+	 */
 	double checkDistance(T& pointA, T& pointB) {
 		T vectAB = pointB - pointA;
 		return (sqrt((double)(pow(vectAB.x, 2.0) + pow(vectAB.y, 2.0))));
 	}
+
+	/**
+	 * sortieren der eingegebenen Liste.
+	 */
 	void sortX(std::list<T>& points)
 	{
 		points.sort([](const T& lhs, const T& rhs){
@@ -110,6 +127,10 @@ private:
 			if(dist < mDist) {
 				foundCandidate_t newCandidate = {dist, curNode->leave};
 				mNearPoints.push(newCandidate);
+				/**
+				 * mDist wird erst gesetzt wenn genug Nachbarn
+				 * gefunden wurden.
+				 */
 				if(mCount == (int) mNearPoints.size()) {
 					mDist = dist;
 				}
@@ -122,7 +143,9 @@ private:
 		} else {
 			pointAxisVal = mQueryPoint.y;
 		}
-
+		/**
+		 * Abfrage ob zuerst links oder rechts gesucht wird.
+		 */
 		if(pointAxisVal <= curNode->key) {
 			if (((double)pointAxisVal - mDist) <= (double)curNode->key) {
 				recursiveSearch(curNode->left);
@@ -141,7 +164,10 @@ private:
 		}
 		return 0;
 	}
-
+	/**
+	 * medianX & medianY berechnen den Median und teilen die input Liste
+	 * entsprechend auf zwei Listen auf
+	 */
 	int medianX(std::list<T> points, std::list<T>& leftPoints, std::list<T>& rightPoints)
 	{
 		sortX(points);
@@ -183,7 +209,9 @@ private:
 		leftPoints = points;
 		return splitValue;
 	}
-
+	/**
+	 *  rekursives aufbauen des kd-Baums
+	 */
 	int split(int depth ,Node_t*& curNode ,std::list<T> points)
 	{
 		std::list<T> left;

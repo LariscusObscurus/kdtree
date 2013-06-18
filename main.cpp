@@ -59,7 +59,9 @@ int main(int argc, char** argv)
 		cerr << "Point count in kdtree: " << fileCount << endl;
 		return EXIT_FAILURE;
 	}
-	
+	/**
+	 * Einlesen der Datei es dürfen keine Werte unter 0 in der datei sein
+	 */
 	while (inputFile >> str) {
 		try {
 			string lhs = str.substr(0, str.find(','));
