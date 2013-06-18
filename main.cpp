@@ -48,7 +48,7 @@ int main(int argc, char** argv)
 	
 	inputFile >> str;
 	try {
-		fileCount = stringToNumber<s32>(argv[3]);
+		fileCount = stringToNumber<s32>(str);
 	} catch (...) {
 		cerr << "error converting number." << endl;
 		return EXIT_FAILURE;
