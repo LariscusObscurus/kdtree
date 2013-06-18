@@ -18,6 +18,7 @@ int main(int argc, char** argv)
 	
 	Point<u32> point;
 	s32 count = 0;
+	s32 fileCount = 0;
 	string str = "";
 	std::list<Point<u32>> points(0);
 	
@@ -35,7 +36,7 @@ int main(int argc, char** argv)
 		point = Point<u32>(x,y);
 		count = stringToNumber<s32>(argv[3]);
 	} catch (...) {
-		cerr << "error converting number" << endl;
+		cerr << "error converting number." << endl;
 		return EXIT_FAILURE;
 	}
 	ifstream inputFile(argv[1]);
@@ -46,6 +47,17 @@ int main(int argc, char** argv)
 	}
 	
 	inputFile >> str;
+	try {
+		fileCount = stringToNumber<s32>(argv[3]);
+	} catch (...) {
+		cerr << "error converting number." << endl;
+		return EXIT_FAILURE;
+	}
+	
+	if (count >= fileCount) {
+		cerr << "One does simply not count more than the kdtree has on points." << endl;
+		return EXIT_FAILURE;
+	}
 	
 	while (inputFile >> str) {
 		try {
