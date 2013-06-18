@@ -2,10 +2,11 @@
 #define KD_TREE
 
 #include <list>
-#include "Point.hpp"
 #include <cmath>
 #include <limits>
 #include <iostream>
+#include <queue>
+
 enum axis_t {
 	X,
 	Y
@@ -22,13 +23,22 @@ class Kdtree
 		Node * left;
 		Node * right;
 	}Node_t;
+
+	typedef struct foundCandidate {
+		float distance;
+		T point;
+		int operator < (const foundCandidate& other) const {
+			return (distance > other.distance);
+		}
+	} foundCandidate_t;
+
 	Node_t *root;
 	std::list<Node_t *> mNodeList;
 
 	T mQueryPoint;
 	int mCount;
 	float mDist;
-	std::list<T> mNearPoints;
+	std::priority_queue<foundCandidate_t> mNearPoints;
 public:
 	Kdtree ()
 	{
@@ -54,9 +64,11 @@ public:
 		mCount = count;
 		mDist = std::numeric_limits<float>::infinity();
 		recursiveSearch(root);
-		for (auto& it : mNearPoints) {
-			std::cout << "Nearest: x " << it.x << " y " 
-			<< it.y << std::endl;
+		for (int i = 0; i < count; i++) {
+			foundCandidate_t tmp = mNearPoints.top();
+			std::cout << "Nearest: x " << tmp.point.x << " y " 
+			<< tmp.point.y << std::endl;
+			mNearPoints.pop();
 		}
 	}
 
@@ -88,8 +100,11 @@ private:
 		if(curNode->key == -1) {
 			float dist = checkDistance(mQueryPoint, curNode->leave);
 			if(dist < mDist) {
-				mDist = dist;
-				mNearPoints.push_back(curNode->leave);
+				foundCandidate_t newCandidate = {dist, curNode->leave};
+				mNearPoints.push(newCandidate);
+				if(mCount == mNearPoints.size()) {
+					mDist = dist;
+				}
 			}
 			return 1;
 		} 
