@@ -39,12 +39,6 @@ int main(int argc, char** argv)
 	}
 	
 	inputFile >> str;
-	try {
-		count = stringToNumber<s32>(str);
-	} catch (...) {
-		printErrorFileFormat();
-		return EXIT_FAILURE;
-	}
 	
 	while (inputFile >> str) {
 		try {
