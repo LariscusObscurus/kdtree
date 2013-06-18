@@ -106,7 +106,7 @@ private:
 			} 
 			if ((pointAxisVal + mDist) > curNode->key) {
 				recursiveSearch(curNode->right);
-
+				
 			}
 		} else {
 			if ((pointAxisVal + mDist) > curNode->key) {
