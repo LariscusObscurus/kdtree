@@ -1,0 +1,7 @@
+<David Wolf if12b096@technikum-wien.at>, <Leonhardt Schwarz if12b076@technikum-wien.at>
+
+Kdtree:
+	Verwendung:
+		./kdtree <filename> <x>,<y> <search_count>
+	Beispiel: 
+		./kdtree test/kd2 8,15 3
