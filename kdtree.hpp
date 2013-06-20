@@ -95,7 +95,13 @@ private:
 	 */
 	double checkDistance(T& pointA, T& pointB) {
 		T vectAB = pointB - pointA;
-		return (sqrt((double)(pow(vectAB.x, 2.0) + pow(vectAB.y, 2.0))));
+		if(vectAB.x == 0){
+			return pow(vectAB.y,2.0);
+		}
+		if(vectAB.y == 0) {
+			return pow(vectAB.x,2.0);
+		}
+		return (pow(vectAB.x, 2.0) + pow(vectAB.y, 2.0));
 	}
 
 	/**

@@ -45,7 +45,7 @@ struct Point
 	
 	Point operator-(const Point& p)
 	{
-		return Point(x - p.x, y - p.y);
+		return Point(abs(x - p.x), abs(y - p.y));
 	}
 	
 	Point operator*(const Point& p)
